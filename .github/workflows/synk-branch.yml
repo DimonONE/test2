@@ -15,9 +15,19 @@ jobs:
           repository: DimonONE/test1
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: develop
+      - name: Prevent loop by checking commit message
+        run: |
+          # Проверка последнего коммита на наличие метки "[skip-sync]"
+          LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "Last commit message: $LAST_COMMIT_MSG"
+          if [[ "$LAST_COMMIT_MSG" == *"[skip-sync]"* ]]; then
+            echo "Skipping sync to avoid loop."
+            exit 0
+          fi
       - name: Sync with Project B
         run: |
           git remote set-url origin https://github.com/DimonONE/test2
           git fetch origin develop
           git checkout develop
+          git merge origin/develop --no-ff
           git push origin develop
