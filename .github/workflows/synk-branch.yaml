@@ -22,7 +22,7 @@ jobs:
 
       - name: Push to another repository
         run: |
-          git remote add destination https://github.com/DimonONE/test2.git
+          git remote add destination https://github.com/DimonONE/test1.git
           git push destination develop
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
