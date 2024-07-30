@@ -25,4 +25,4 @@ jobs:
           git remote add destination https://github.com/DimonONE/test1.git
           git push destination develop
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
