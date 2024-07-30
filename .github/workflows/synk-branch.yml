@@ -1,0 +1,19 @@
+name: Test and Notify
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Notify Project B
+        if: success()
+        run: |
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/organization/project-b/dispatches \
+            -d '{"event_type": "sync_with_project_a"}'
