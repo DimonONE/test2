@@ -17,8 +17,8 @@ jobs:
 
       - name: Set up Git
         run: |
-          git config --global user.name "Test2"
-          git config --global user.email "your-email2@example.com"
+          git config --global user.name "DimonONE"
+          git config --global user.email "dimonmezey@gmail.com"
 
       - name: Push to another repository
         run: |
