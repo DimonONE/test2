@@ -1,8 +1,8 @@
-name: Sync Develop from Test1
+name: Sync Develop from Test2
 
 on:
   workflow_run:
-    workflows: ["Sync Develop to Test2"]
+    workflows: ["Sync Develop to Test1"]
     types:
       - completed
 
