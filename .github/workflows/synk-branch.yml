@@ -1,11 +1,12 @@
-name: Sync from Test1
+name: Test and Notify
 
 on:
-  repository_dispatch:
-    types: [sync_with_project_a]
+  push:
+    branches:
+      - develop
 
 jobs:
-  sync:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Test2
