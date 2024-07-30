@@ -1,26 +1,30 @@
-name: Sync Develop Branch
+name: Sync Develop from Test1
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_run:
+    workflows: ["Sync Develop to Test2"]
+    types:
+      - completed
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: develop
+      - name: Checkout the repo
+        uses: actions/checkout@v3
 
       - name: Set up Git
         run: |
-          git config --global user.name "Test2"
-          git config --global user.email "your-email2@example.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
 
-      - name: Push to another repository
+      - name: Pull changes from test1
         run: |
-          git remote add destination https://x-access-token:${{ secrets.PAT }}@github.com/DimonONE/test1.git
-          git push destination develop
+          git remote add test1 https://github.com/DimonONE/test1.git
+          git fetch test1
+          git checkout develop
+          git pull test1 develop
+          git push origin develop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
