@@ -1,0 +1,23 @@
+name: Sync with Project A
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project A
+        uses: actions/checkout@v2
+        with:
+          repository: DimonONE/test1
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: develop
+      - name: Sync with Project B
+        run: |
+          git remote set-url origin https://github.com/DimonONE/test2
+          git fetch origin develop
+          git checkout develop
+          git push origin develop
