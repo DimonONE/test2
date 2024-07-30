@@ -1,19 +1,41 @@
-name: Test and Notify
+name: Sync from Test1
 
 on:
-  push:
-    branches:
-      - develop
+  repository_dispatch:
+    types: [sync_with_project_a]
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Notify Project B
-        if: success()
+      - name: Checkout Test2
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prevent loop by checking commit message
         run: |
-          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/DimonONE/test1/dispatches \
-            -d '{"event_type": "sync_with_project_a"}'
+          # Проверка последнего коммита на наличие метки "[skip-sync]"
+          LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "Last commit message: $LAST_COMMIT_MSG"
+          if [[ "$LAST_COMMIT_MSG" == *"[skip-sync]"* ]]; then
+            echo "Skipping sync to avoid loop."
+            exit 0
+          fi
+      - name: Checkout Test1
+        uses: actions/checkout@v2
+        with:
+          repository: DimonONE/test1
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: develop
+      - name: Sync with Test2
+        run: |
+          git remote set-url origin https://github.com/DimonONE/test2
+          git fetch origin develop
+          git checkout develop
+          git merge --no-ff origin/develop -m "Sync with test1 [skip-sync]"
+          git push origin develop
+      - name: Run tests
+        run: |
+          # Запуск тестов
+          npm install
+          npm test
