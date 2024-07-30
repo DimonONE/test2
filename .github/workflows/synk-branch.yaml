@@ -1,0 +1,28 @@
+name: Sync Develop Branch
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+
+      - name: Push to another repository
+        run: |
+          git remote add destination https://github.com/DimonONE/test2.git
+          git push destination develop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
