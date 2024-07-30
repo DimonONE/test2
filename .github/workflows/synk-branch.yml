@@ -18,6 +18,8 @@ jobs:
       - name: Notify Project 2
         if: success()
         run: |
+          git pull origin develop --allow-unrelated-histories
+
           # Отправка запроса в репозиторий проекта test2 для начала синхронизации
           curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
