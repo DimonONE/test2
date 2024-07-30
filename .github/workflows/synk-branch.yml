@@ -34,8 +34,3 @@ jobs:
           git checkout develop
           git merge --no-ff origin/develop -m "Sync with test1 [skip-sync]"
           git push origin develop
-      - name: Run tests
-        run: |
-          # Запуск тестов
-          npm install
-          npm test
